@@ -60,6 +60,9 @@ const NSInteger AIRMapMaxZoomLevel = 20;
     // Implementation based on RCTTextField, another component with indirect children
     // https://github.com/facebook/react-native/blob/v0.16.0/Libraries/Text/RCTTextField.m#L20
     NSMutableArray<UIView *> *_reactSubviews;
+
+    // Keep a list of polylines
+    // NSMutableArray<AIRMapPolyline *> *_polylines;
 }
 
 - (instancetype)init
@@ -111,7 +114,13 @@ const NSInteger AIRMapMaxZoomLevel = 20;
         [self addAnnotation:(id <MKAnnotation>) subview];
     } else if ([subview isKindOfClass:[AIRMapPolyline class]]) {
         ((AIRMapPolyline *)subview).map = self;
-        [self addOverlay:(id<MKOverlay>)subview];
+        NSInteger zIndex = ((AIRMapPolyline *)subview).zIndex;
+        if (zIndex > 0) {
+            [self insertOverlay:(id<MKOverlay>)subview atIndex:zIndex];
+        } else {
+            [self addOverlay:(id<MKOverlay>)subview];
+        }
+        // [_polylines addObject:(AIRMapPolyline *)subview];
     } else if ([subview isKindOfClass:[AIRMapPolygon class]]) {
         ((AIRMapPolygon *)subview).map = self;
         [self addOverlay:(id<MKOverlay>)subview];
@@ -146,6 +155,7 @@ const NSInteger AIRMapMaxZoomLevel = 20;
         [self removeAnnotation:(id<MKAnnotation>)subview];
     } else if ([subview isKindOfClass:[AIRMapPolyline class]]) {
         [self removeOverlay:(id <MKOverlay>) subview];
+        // [_polylines removeObject:(AIRMapPolyline *)subview];
     } else if ([subview isKindOfClass:[AIRMapPolygon class]]) {
         [self removeOverlay:(id <MKOverlay>) subview];
     } else if ([subview isKindOfClass:[AIRMapCircle class]]) {

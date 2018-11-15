@@ -9,7 +9,7 @@
 
 
 @implementation AIRMapPolyline {
-    
+
 }
 
 - (void)setFillColor:(UIColor *)fillColor {
@@ -58,6 +58,12 @@
 - (void)setLineDashPattern:(NSArray <NSNumber *> *)lineDashPattern {
     _lineDashPattern = lineDashPattern;
     [self update];
+}
+
+- (void)setZIndex:(NSInteger)zIndex
+{
+    _zIndex = zIndex;
+    self.layer.zPosition = zIndex;
 }
 
 - (void)setCoordinates:(NSArray<AIRMapCoordinate *> *)coordinates {
